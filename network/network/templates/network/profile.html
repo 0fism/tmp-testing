@@ -1,0 +1,90 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+<div class="card">
+    <div class="card-body">
+        <h1 class="card-title" style="text-align: center;">{{profile_user}}</h1>
+        <!--user.follower.followers_set.count, user.follower.following, not worked -->
+        <h5 class="card-text" style="display: inline-block;"><span id="followingToggleButton">{{total_following}} </span> following</h5> |
+        <h5 class="card-text" style="display: inline-block;"><span id="followToggleButton">{{total_followers}} </span> followers</h5>
+        
+    
+        <!--Only condition between id, {{user.id}}{{profile_user.id}}, {{user.username}}{{profile_user}} can't-->
+        {% if user.is_authenticated and user.id == profile_user.id %}
+        <h6 class="card-text" style="text-align: center;"><span id="sp_posts">{{sum_posts}} </span> Posts</h6>
+        {% else %}
+        <p class="card-text" style="text-align: center;">
+            <!-- Check isnt exist following-->
+            {% if user.is_authenticated %}
+                {% if exist_following > 0 %}
+                    <button id="followButton" data-id="{{profile_user.id}}" type="button" class="btn btn-primary">Following</button>
+                {% else %}
+                    <button id="followButton" data-id="{{profile_user.id}}" type="button" class="btn btn-outline-primary">Follow</button>
+                {%endif%}
+            {% else %}
+            <a href="{% url 'login' %}"></a><button id="followButton" data-id="{{profile_user.id}}" type="button" class="btn btn-outline-primary">Follow</button><a>
+            </p>
+            {%endif%}
+        {%endif%}
+
+    </div>
+</div>
+
+<div id="content">
+    {% if user.is_authenticated and user.id == profile_user.id %}
+        <h3 class="card-title">My Posts</h3>
+        {% else %}
+        <h3 class="card-title">{{profile_user}} 's Posts</h3>
+    {%endif%}
+  
+<br>
+<div id="posts-main">
+    {% for post in posts %}
+    <div id="posts">
+    <h5>{{post.user.username}}</h5>
+
+   
+    <p class="card-text" id="post_text_{{post.id}}"> {{ post.text }}</p>
+        {%if post.user.id == user.id%}
+        <a href="#" class="card-link" id="edit_post_{{post.id}}" data-id="{{post.id}}" data-toggle="modal">Edit</a>
+        
+        {%endif%}
+    
+
+    <form action="#" method="POST" id="form_{{post.id}}" data-id="{{post.id}}" style="display: none">
+        {% csrf_token %}
+        <div class="form-group">
+        {{ form_edit.id_form_edit }} 
+        </div>
+        <div id="post_text_alert_{{post.id}}">
+        </div>
+        <div id="close_button"><button type="button" data-id="{{post.id}}" id="close_form_{{post.id}}" class="btn btn-secondary"
+            data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" id="btnSave">Save changes</button>
+        </div>
+    </form>
+
+    <p>{{post.timestamp}}</p>
+    <p class="card-text">
+                <div data-id="{{post.id}}" class="card-link
+                 {% if post.totalLike > 0 %} 
+                    fas 
+                 {%else%} 
+                    far 
+                 {% endif %} 
+                  fa-heart">
+                <trigger class="text-muted">{{post.like_set.count}}</trigger>
+    
+            </div>
+            </p>
+        </div>
+    </div>
+    <br>
+
+    {% empty %}
+        <h2>There is No posts</h2>
+    {% endfor %}
+</div>
+</div>
+
+{% endblock %}

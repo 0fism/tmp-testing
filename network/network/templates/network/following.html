@@ -1,0 +1,37 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+<h1>Following</h1>
+
+<div id="posts-main">
+
+    {% for post in posts %}
+    <div id='posts'>
+    <h5><a href="{% url 'profile' post.user.username %}">{{post.user.username}} </a></h5>
+
+    <p class="card-text" id="post_text_{{post.id}}"> {{ post.text }}</p>
+
+    <p>{{post.timestamp}}</p>
+    <p class="card-text">
+                <div data-id="{{post.id}}" class="card-link
+                 {% if post.totalLike > 0 %} 
+                    fas 
+                 {%else%} 
+                    far 
+                 {% endif %} 
+                  fa-heart">
+                <trigger class="text-muted">{{post.like_set.count}}</trigger>
+                        
+            </div>
+            </p>
+        </div>
+    </div>
+    <br>
+
+    {% empty %}
+        <h2>There is No posts</h2>
+    {% endfor %}
+</div>
+</div>
+
+{% endblock %}

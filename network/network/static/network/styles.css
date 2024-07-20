@@ -1,0 +1,29 @@
+.fas.fa-heart{
+    color: red;
+}
+
+div#posts {
+    padding: 80;
+    margin: 0px 120px 0px 120px;
+    display: block;
+    border: 1px #d3d3d3 solid;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.card-title{
+    padding: 80;
+    margin: 0px 120px 0px 120px;
+}
+
+span#followingToggleButton{
+    color: #5f9ea0;
+}
+
+span#followToggleButton{
+    color: #1e90ff;
+}
+
+.card-body {
+    text-align: center;
+}

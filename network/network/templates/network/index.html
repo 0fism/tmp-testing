@@ -1,0 +1,72 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+
+<h1>All Posts</h1>
+{% if user.is_authenticated %}
+<div class="card">
+    <div class="card-body">
+        <form action="{% url 'post_message' %}" method="POST">
+            {% csrf_token %}
+                <div class="form-group">
+                    <label for="post_text" class="h4">New Post</label>
+                    {{ form.post }}
+                </div>
+            <button type="submit" class="btn btn-primary btn-lg">Share Now</button>
+        </form>
+    </div>
+</div>
+{%endif%}
+
+<br>
+<div id="posts-main">
+    {% for post in posts %}
+    <div id="posts">
+    <h5><a href="{% url 'profile' post.user.username %}">{{post.user.username}} </a></h5>
+
+   
+    <p class="card-text" id="post_text_{{post.id}}"> {{ post.text }}</p>
+        {%if post.user.id == user.id%}
+        <a href="#" class="card-link" id="edit_post_{{post.id}}" data-id="{{post.id}}" data-toggle="modal">edit</a>
+        
+        {%endif%}
+    
+
+    <form action="#" method="POST" id="form_{{post.id}}" data-id="{{post.id}}" style="display: none">
+        {% csrf_token %}
+        <div class="form-group">
+        {{ form_edit.id_form_edit }} 
+        </div>
+        <div id="post_text_alert_{{post.id}}">
+        </div>
+        <div id="close_button"><button type="button" data-id="{{post.id}}" id="close_form_{{post.id}}" class="btn btn-secondary"
+            data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" id="btnSave">Save changes</button>
+        </div>
+    </form>
+
+    <p>{{post.timestamp}}</p>
+    <p class="card-text">
+                <div data-id="{{post.id}}" class="card-link
+                 {% if post.ctotalLike > 0 %} 
+                    fas
+                 {%else%} 
+                    far 
+                 {% endif %} 
+                  fa-heart">
+                <trigger class="text-muted">{{post.like_set.count}}</trigger>
+                   
+            </div>
+            </p>
+        </div>
+    </div>
+    <br>
+
+    {% empty %}
+        <h2>No posts</h2>
+    {% endfor %}
+</div>
+</div>
+
+
+{% endblock %}
